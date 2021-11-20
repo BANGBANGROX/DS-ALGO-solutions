@@ -1,44 +1,46 @@
 #include<bits/stdc++.h>
 using namespace std;
-typedef long long ll;
 
-ll maxProduct(vector<int>& a, int n) {
-	ll maxEnding = 1, minEnding = 1, maxOverall = 0;
-	bool flag = 0, isZero = 0;
+int maxProduct(vector<int>& nums) {
+	int n = nums.size(), l = 0, r = 0, res = INT_MIN, product = 1;
 
-	for (int i = 0; i < n; ++i) {
-		if (a[i] > 0) {
-			maxEnding = maxEnding * (ll)a[i];
-			minEnding = min(minEnding * (ll)a[i], (ll)1);
-			flag = 1;
-		}
-		else if (a[i] == 0) {
-			maxEnding = 1;
-			minEnding = 1;
-			isZero = 1;
+	while (r < n) {
+		while (nums[r] == 0 && l < r) {
+			res = max(res, product);
+			product /= nums[l];
+			++l;
+	    }
+		if (nums[r] == 0) {
+			++l;
+			res = max(res, 0);
 		}
 		else {
-			ll temp = maxEnding;
-			maxEnding = max((ll)1, minEnding * (ll)a[i]);
-			minEnding = temp * a[i];
+			product *= nums[r];
+			res = max(res, product);
 		}
-		maxOverall = max(maxOverall, maxEnding);
+		++r;
 	}
-	if (!flag && isZero && maxOverall == 1) maxOverall = 0;
 
-	return maxOverall;
+	while (l < r) {
+		res = max(res, product);
+		product /= nums[l];
+		++l;
+	}
+
+	return res;
 }
 
 int main() {
 	int T;
 	cin >> T;
+
 	while (T--) {
 		int n;
 		cin >> n;
-		vector<int> a(n);
-		for (int& x : a) cin >> x;
+		vector<int> nums(n);
+		for (int& x : nums) cin >> x;
 
-		cout << maxProduct(a, n) << endl;
+		cout << maxProduct(nums) << endl;
 	}
 
 	return 0;
