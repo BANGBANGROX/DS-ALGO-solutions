@@ -1,38 +1,53 @@
-#include<bits/stdc++.h>
+// { Driver Code Starts
+// Initial Template for C++
+#include <bits/stdc++.h>
 using namespace std;
 
-string longestCommonPrefix(vector<string>& strs) {
-	int minLen = INT_MAX, n = strs.size();
-	string str("");
+// } Driver Code Ends
+//User function template for C++
 
-	for (int i = 0; i < n; ++i) {
-		if (minLen > strs[i].size()) {
-			minLen = strs[i].size();
-			str = strs[i];
-		}
-	}
+class Solution {
+public:
+    vector<int> longestCommonPrefix(string s, string t) {
+        int start = -1, end = -1, i = 0, j = 0, n = s.size(), m = t.size();
 
-	for (int i = 0; i < minLen; ++i) {
-		for (int j = 0; j < n; ++j) {
-			if (str[i] != strs[j][i]) {
-				return str.substr(0, i);
-			}
-		}
-	}
+        while (i < n && j < m) {
+            if (s[i] == t[j]) {
+                start = i;
+                while (i < n && j < m && s[i] == t[j]) {
+                    ++i;
+                    ++j;
+                }
+                if (i > end) end = i;
+            }
+            else {
+                i = 0;
+                ++j;
+            }
+        }
 
-	return str;
-}
+        return { start,end };
+    }
+};
+
+// { Driver Code Starts.
 
 int main() {
-	int T;
-	cin >> T;
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        string str1, str2;
+        cin >> str1 >> str2;
+        Solution ob;
+        vector<int> p;
+        p = ob.longestCommonPrefix(str1, str2);
+        if (p[0] == -1)
+            cout << "-1\n";
 
-	while (T--) {
-		int n;
-		cin >> n;
-		vector<string> strs(n);
-		for (int i = 0; i < n; ++i) cin >> strs[i];
-
-		cout << longestCommonPrefix(strs) << endl;
-	}
+        else
+            cout << p[0] << " " << p[1] << "\n";
+    }
+    return 0;
 }
+// } Driver Code Ends

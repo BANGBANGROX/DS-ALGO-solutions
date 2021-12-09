@@ -2,32 +2,16 @@
 using namespace std;
 
 int maxProduct(vector<int>& nums) {
-	int n = nums.size(), l = 0, r = 0, res = INT_MIN, product = 1;
+	int maxProduct = nums[0], maxi = nums[0], mini = nums[0], n = nums.size();
 
-	while (r < n) {
-		while (nums[r] == 0 && l < r) {
-			res = max(res, product);
-			product /= nums[l];
-			++l;
-	    }
-		if (nums[r] == 0) {
-			++l;
-			res = max(res, 0);
-		}
-		else {
-			product *= nums[r];
-			res = max(res, product);
-		}
-		++r;
+	for (int i = 1; i < n; ++i) {
+		if (nums[i] < 0) swap(maxi, mini);
+		maxi = max(nums[i], nums[i] * maxi);
+		mini = min(nums[i], nums[i] * mini);
+		maxProduct = max(maxi, maxProduct);
 	}
 
-	while (l < r) {
-		res = max(res, product);
-		product /= nums[l];
-		++l;
-	}
-
-	return res;
+	return maxProduct;
 }
 
 int main() {
