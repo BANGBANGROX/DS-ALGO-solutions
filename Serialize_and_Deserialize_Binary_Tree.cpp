@@ -2,68 +2,92 @@
 using namespace std;
 
 struct TreeNode {
-    int val;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+	int val;
+	TreeNode* left, * right;
+
+	TreeNode(int x) {
+		val = x;
+		left = right = NULL;
+	}
+
+    TreeNode() {
+        val = 0;
+        left = right = NULL;
+    }
 };
 
 class Codec {
 public:
 
-    void generate(TreeNode* root, int index, string* str) {
-        if (!root) {
-            if (index < str->size()) str[index] = "null";
-            return;
-        }
-
-        str[index] = to_string(root->val);
-
-        generate(root->left, 2 * index + 1, str);
-        generate(root->right, 2 * index + 2, str);
-    }
-
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
         if (root == NULL) return "";
 
-        int n = 0;
+        string ans(""), nulls("");
         queue<TreeNode*> q;
 
         q.push(root);
-         
+
         while (!q.empty()) {
             int size = q.size();
-            ++n;
             while (size--) {
                 TreeNode* curr = q.front();
                 q.pop();
-                if (curr->left) q.push(curr->left);
-                if (curr->right) q.push(curr->right);
+                if (curr != NULL) {
+                    ans += nulls + to_string(curr->val) + ",";
+                    q.push(curr->left);
+                    q.push(curr->right);
+                    nulls.clear();
+                }
+                else {
+                    nulls += "null,";
+                }
             }
         }
+        ans.pop_back();
 
-        n = (1 << n) - 1;
-
-        string* str = new string[n];
-
-        generate(root, 0, str);
-
-        string res("");
-
-        for (int i = 0; i < n; ++i) {
-            res = (res + str[i] + " ");
-        }
-
-        return res;
+        return ans;
     }
 
     // Decodes your encoded data to tree.
     TreeNode* deserialize(string data) {
-        TreeNode* root = NULL;
+        if (data.empty()) return NULL;
 
-        if (data.empty()) return root;
+        vector<string> str;
+        data.push_back(',');
 
-        root = new TreeNode(stoi(data[0]));
+        stringToVector(data, str);
+
+        queue<TreeNode**> q;
+
+        TreeNode* root = new TreeNode;
+
+        q.push(&root);
+
+        int k = 0;
+
+        while (!q.empty()) {
+            int size = q.size();
+            while (size--) {
+                TreeNode** curr = q.front();
+                q.pop();
+                if (k < str.size() && str[k] != "null") {
+                    if ((*curr) == NULL) *curr = new TreeNode(stoi(str[k]));
+                    q.push(&(*curr)->left);
+                    q.push(&(*curr)->right);
+                }
+                ++k;
+            }
+        }
+
+        return root;
+    }
+
+    void stringToVector(string s,vector<string>&vec) {
+        stringstream ss(s);
+        string str;
+
+        while (getline(ss, str, ',')) vec.push_back(str);
     }
 };
+
