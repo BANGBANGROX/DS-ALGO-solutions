@@ -1,64 +1,69 @@
-#include<bits/stdc++.h>
+// { Driver Code Starts
+// Initial Template for C++
+
+#include <bits/stdc++.h>
 using namespace std;
 
-void reverse(int l, int r, vector<int>& a) {
-    while (l < r) {
-        swap(a[l], a[r]);
-        ++l;
-        --r;
-    }
-}
+// } Driver Code Ends
+// User function Template for C++
 
-int bsearch(int l, int r, vector<int>& a, int key) {
-    int index = -1;
+class Solution {
+    bool nextPermutationUtil(vector<int>& a) {
+        int n = a.size();
 
-    while (l <= r) {
-        int mid = (l + r) / 2;
-        if (a[mid] <= key) {
-            r = mid - 1;
+        if (n == 1) return false;
+
+        int last = n - 2;
+
+        while (last >= 0 && a[last] >= a[last + 1]) {
+            --last;
         }
-        else {
-            l = mid + 1;
-            if (index == -1 || a[index] >= a[mid]) {
-                index = mid;
+
+        if (last < 0) return false;
+
+        int nextGreater = n - 1;
+
+        for (int i = n - 1; i > last; --i) {
+            if (a[i] > a[last]) {
+                nextGreater = i;
+                break;
             }
         }
+
+        swap(a[last], a[nextGreater]);
+        reverse(a.begin() + last + 1, a.end());
+
+        return true;
     }
 
-    return index;
-}
+public:
+    vector<int> nextPermutation(int n, vector<int>& arr) {
+        // code here
+        if (!nextPermutationUtil(arr)) {
+            reverse(arr.begin(), arr.end());
+        }
 
-vector<int> nextPermutation(int n, vector<int> arr) {
-    int i = n - 2;
-
-    for (; i > -1 && arr[i] >= arr[i + 1]; --i);
-
-    if (i < 0) { // not possible so return reverse 
-        reverse(0, n - 1, arr);
         return arr;
     }
+};
 
-    int index = bsearch(i + 1, n - 1, arr, arr[i]);
-    swap(arr[i], arr[index]);
-    reverse(i + 1, n - 1, arr);
-
-    return arr;
-}
+// { Driver Code Starts.
 
 int main() {
-    int T;
-    cin >> T;
-    while (T--) {
-        int n;
-        cin >> n;
-        vector<int> a(n);
-        for (int& x : a) cin >> x;
+    int t;
+    cin >> t;
+    while (t--) {
+        int N;
+        cin >> N;
+        vector<int> arr(N);
+        for (int i = 0; i < N; i++)
+            cin >> arr[i];
 
-        vector<int> res = nextPermutation(n, a);
-
-        for (int x : res) cout << x << " ";
-        cout << endl;
+        Solution ob;
+        vector<int> ans = ob.nextPermutation(N, arr);
+        for (int u : ans)
+            cout << u << " ";
+        cout << "\n";
     }
-
     return 0;
-}
+}  // } Driver Code Ends
