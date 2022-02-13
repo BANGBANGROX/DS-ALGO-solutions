@@ -1,22 +1,32 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int divide(int dividend, int divisor) {
-	int sign = ((dividend > 0) ^ (divisor > 0)) ? -1 : 1, q = 0, temp = 0;
-	dividend = abs(dividend);
-	divisor = abs(divisor);
+class Solution {
+	typedef long long ll;
+public:
+	int divide(int dividend, int divisor) {
+		ll longDividend = abs((ll)dividend);
+		ll longDivisor = abs((ll)divisor);
+		int sign = (dividend > 0 && divisor < 0) || (dividend < 0 && divisor > 0) ? -1 : 1;
+		ll quotient = 0;
+		ll temp = 0;
 
-	for (int i = 31; i > -1; --i) {
-		if (temp + (divisor << i) <= dividend) {
-			temp += divisor << i;
-			q |= (1 << i);
+		for (int i = 31; i >= 0; --i) {
+			if (temp + (longDivisor << i) <= longDividend) {
+				temp += (longDivisor << i);
+				quotient |= (1LL << i);
+			}
 		}
+        
+		ll ans = sign * quotient;
+
+		if (ans > INT_MAX) return INT_MAX;
+		
+		if (ans < INT_MIN) return INT_MIN;
+
+		return ans;
 	}
-
-	if (sign == -1) q *= -1;
-
-	return q;
-}
+};
 
 int main() {
 	int T;
@@ -26,7 +36,8 @@ int main() {
 		int dividend, divisor;
 		cin >> dividend >> divisor;
 
-		cout << divide(dividend, divisor) << endl;
+		Solution solution;
+		cout << solution.divide(dividend, divisor) << endl;
 	}
 
 	return 0;
