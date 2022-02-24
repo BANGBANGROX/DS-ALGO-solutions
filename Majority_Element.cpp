@@ -1,53 +1,37 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int findCandidate(int a[], int n) {
-	int majIndex = 0, cnt = 1;
+class Solution {
+public:
+	int majorityElement(vector<int>& nums) {
+		int count = 0;
+		int ans = -1;
 
-	for (int i = 1; i < n; ++i) {
-		if (a[majIndex] == a[i]) {
-			++cnt;
+		for (int& num : nums) {
+			if (count == 0) {
+				ans = num;
+				++count;
+			}
+			else if (ans == num) ++count;
+			else --count;
 		}
-		else {
-			--cnt;
-		}
-		if (cnt == 0) {
-			majIndex = i;
-			cnt = 1;
-		}
+
+		return ans;
 	}
-
-	return a[majIndex];
-}
-
-int isMajority(int a[], int n, int val) {
-	int cnt = 0;
-	
-	for (int i = 0; i < n; ++i) {
-		if (a[i] == val) {
-			++cnt;
-		}
-	}
-
-	return cnt > n / 2;
-}
-
-int majorityElement(int a[], int n) {
-	int candidate = findCandidate(a, n);
-	if (isMajority(a, n, candidate)) return candidate;
-	return -1;
-}
+};
 
 int main() {
 	int T;
 	cin >> T;
+
 	while (T--) {
 		int n;
 		cin >> n;
-		int* a = new int[n];
-		for (int i = 0; i < n; ++i) cin >> a[i];
+		vector<int> nums(n);
+		for (int& x : nums) cin >> x;
 
-		cout << majorityElement(a, n) << endl;
+		Solution solution;
+		cout << solution.majorityElement(nums) << endl;
 	}
 
 	return 0;
