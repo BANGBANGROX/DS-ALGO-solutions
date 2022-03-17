@@ -7,28 +7,22 @@ using namespace std;
 //User function Template for C++
 class Solution {
 public:
-    int count(int n, vector<int>& a, int x) {
+    int count(int n, vector<int>& nums, int target) {
         // code here
-        vector<bool> changed(n);
-        int oneChanges = 0, ans = INT_MAX;
+        int ans = INT_MAX;
+        int oneBits = 0;
 
-        for (int i = 31; i >= 0; --i) {
-            int bit = (1 << i) & x, zeroChanges = 0;
-            for (int j = 0; j < n; ++j) {
-                int currBit = (1 << i) & a[j];
-                if (bit > 0) {
-                    if (currBit == 0 && !changed[j]) {
-                        changed[j] = 1;
-                        ++oneChanges;
-                    }
-                }
-                else {
-                    if (currBit == 0 && !changed[j]) {
-                        ++zeroChanges;
-                    }
+        for (int bitSize = 31; bitSize >= 0; --bitSize) {
+            int changes = 0;
+            int state = (target & (1 << bitSize));
+            for (int i = 0; i < n; ++i) {
+                if ((nums[i] & (1 << bitSize)) == 0) {
+                    if (state > 0) nums[i] = INT_MAX;
+                    ++changes;
                 }
             }
-            if (bit == 0) ans = min(ans, oneChanges + zeroChanges);
+            if (state > 0) oneBits += changes;
+            else ans = min(ans, changes + oneBits);
         }
 
         return ans;
@@ -39,7 +33,8 @@ public:
 int main() {
     int t;
     cin >> t;
-    while (t--) {
+    while (t--)
+    {
         int N, X;
         cin >> N >> X;
         vector<int> A(N);
