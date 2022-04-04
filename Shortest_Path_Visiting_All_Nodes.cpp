@@ -5,33 +5,32 @@ class Solution {
 public:
 	int shortestPathLength(vector<vector<int>>& graph) {
 		int n = graph.size();
-		int steps = 0;
-		int endMask = (1 << n) - 1;
-		vector<vector<bool>> visited(n, vector<bool>(1 << n));
+		int fullMask = (1 << n) - 1;
+		int ans = 0;
+		vector<vector<bool>> visited(n, vector<bool>(fullMask + 1));
 		queue<pair<int, int>> q;
 
 		for (int i = 0; i < n; ++i) {
-			q.push({ i,(1 << i) });
 			visited[i][1 << i] = true;
+			q.push({ i,1 << i });
 		}
 
 		while (!q.empty()) {
 			int size = q.size();
 			for (int i = 0; i < size; ++i) {
-				pair<int, int> currentState = q.front();
+				int node = q.front().first;
+				int mask = q.front().second;
 				q.pop();
-				int node = currentState.first;
-				int mask = currentState.second;
 				for (int child : graph[node]) {
-					int nextMask = mask | (1 << child);
-					if (nextMask == endMask) return 1 + steps;
-					if (!visited[child][nextMask]) {
-						q.push({ child,nextMask });
-						visited[child][nextMask] = true;
+					int newMask = mask | (1 << child);
+					if (newMask == fullMask) return 1 + ans;
+					if (!visited[child][newMask]) {
+						q.push({ child,newMask });
+						visited[child][newMask] = true;
 					}
 				}
 			}
-			++steps;
+			++ans;
 		}
 
 		return 0;
