@@ -1,7 +1,7 @@
 // { Driver Code Starts
 //Initial template for C++
 
-#include<bits/stdc++.h> 
+#include <bits/stdc++.h>
 using namespace std;
 
 // } Driver Code Ends
@@ -9,35 +9,34 @@ using namespace std;
 
 class Solution {
 public:
-    int findMinInsertions(string s) {
-        // code here 
+    int countMin(string s) {
+        //complete the function here
         int n = s.size();
         vector<vector<int>> dp(n, vector<int>(n));
 
-        for (int len = 1; len < n; ++len) {
-            for (int l = 0, h = len; h < n; ++l, ++h) {
-                dp[l][h] = (s[l] == s[h]) ? dp[l + 1][h - 1] : 
-                    min(dp[l + 1][h], dp[l][h - 1]) + 1;
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = i; j < n; ++j) {
+                if (i == j) dp[i][j] = 1;
+                else if (s[i] == s[j]) dp[i][j] = dp[i + 1][j - 1] + 2;
+                else dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
             }
         }
 
-        return dp[0][n - 1];
+        return n - dp[0][n - 1];
     }
 };
 
 // { Driver Code Starts.
-
-
-
 int main() {
     int t;
     cin >> t;
     while (t--) {
-        string S;
-        cin >> S;
+        string str;
+        cin >> str;
         Solution ob;
-        cout << ob.findMinInsertions(S) << endl;
+        cout << ob.countMin(str) << endl;
     }
     return 0;
 }
+
 // } Driver Code Ends
