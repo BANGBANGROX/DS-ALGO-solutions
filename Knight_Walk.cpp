@@ -48,20 +48,20 @@ public:
 };
 
 //{ Driver Code Starts.
-int main(){
-	int tc;
-	cin >> tc;
-	while(tc--){
-		vector<int>KnightPos(2);
-		vector<int>TargetPos(2);
-		int N;
-		cin >> N;
-		cin >> KnightPos[0] >> KnightPos[1];
-		cin >> TargetPos[0] >> TargetPos[1];
-		Solution obj;
-		int ans = obj.minStepToReachTarget(KnightPos, TargetPos, N);
-		cout << ans <<"\n";
-	}
-	return 0;
+int main() {
+    int tc;
+    cin >> tc;
+    while (tc--) {
+        vector<int> KnightPos(2);
+        vector<int> TargetPos(2);
+        int N;
+        cin >> N;
+        cin >> KnightPos[0] >> KnightPos[1];
+        cin >> TargetPos[0] >> TargetPos[1];
+        Solution obj;
+        int ans = obj.minStepToReachTarget(KnightPos, TargetPos, N);
+        cout << ans << "\n";
+    }
+    return 0;
 }
 // } Driver Code Ends
